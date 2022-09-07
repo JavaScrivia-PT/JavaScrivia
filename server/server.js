@@ -6,6 +6,8 @@ const PORT = 3000;
 
 app.use(express.json());
 
+app.use('/bundleFolder', express.static(path.join(__dirname, '../bundleFolder')));
+
 app.post('/api', userController.checkSign, userController.createUser, (req, res) => {
   //post request from signup page
   return res.status(200).send(true); 
@@ -32,7 +34,8 @@ app.get('/user', userController.getScore, (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  return res.status(200).send('successfully logged in!');
+  //serve webpack production index.html
+  return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 //catch all route handler

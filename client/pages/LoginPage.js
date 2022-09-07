@@ -8,6 +8,11 @@ export default function LoginPage (props) {
     
     const navigateToTrivia = () => { navigate('trivia') };  
 
+
+    // refactor with axios
+    // hash password
+    // change to post request w/ username and password body
+
     const handleSubmit = () => {
         fetch(`/api?username=${document.getElementById('user1').value}&password=${document.getElementById('pass1').value}`)
         .then(response => response.json())

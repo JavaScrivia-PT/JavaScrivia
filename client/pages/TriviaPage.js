@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import LeaderBoard from './LeaderBoard';
 import Answer from './Answer';
 
+
+// look into redux toolkit to make this simpler
 const TriviaPage = props => {
   const [ explanation, setExplanation ] = useState(false);
   const [ clicked, setClicked ] = useState(false);
@@ -29,6 +31,8 @@ const TriviaPage = props => {
     navigate('/landing');
   };
 
+  // refactor not to reload all questions on button click
+  //https://api.javascript-trivia.com/en/2 (questions start at index 1)
   const grabTrivia = () => {
     fetch(`https://api.javascript-trivia.com/`)
       .then(res => res.json())
@@ -46,6 +50,7 @@ const TriviaPage = props => {
       });
   };
 
+  // checks for correct answer and sets the score
   const changeBoolean = e => {
     if (e.target.innerHTML[0] === state.correctAnswer && clicked === false) {
       let tempor = correct
@@ -71,9 +76,10 @@ const TriviaPage = props => {
     setExplanation(true);
   };
 
+  // maybe break down into different react components
   return (
     <div className="wrapper">
-      <h1 class="landingH1">It's Time To Get JavaSavyyyyy</h1>
+      <h1 className="landingH1">It's Time To Get JavaSavvyyyy</h1>
       <div className="mainContainer">
         <div className="triviaContainer">
           <div className="codeSnippet">

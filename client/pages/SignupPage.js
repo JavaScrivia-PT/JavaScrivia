@@ -8,6 +8,7 @@ export default function SignupPage (props) {
     
     const navigateToTrivia = () => { navigate('trivia') };     
 
+    // hash password here
     const handleSignup = () => {
         fetch('/api',
         {
@@ -29,6 +30,7 @@ export default function SignupPage (props) {
         .catch(err => console.log(err));
     };
 
+    // change form to be onsumbit
     return (
         <div className="initialContainer">
             <h1 className="landingH1">Sign Up</h1>
