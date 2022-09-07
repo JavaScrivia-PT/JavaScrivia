@@ -39,6 +39,8 @@ const TriviaPage = props => {
   useEffect(() => {
     if (questions) {
       const randomizedState = {...state};
+      const answerOptions = {...state.answerOptions}
+      randomizedState.answerOptions = answerOptions;
       const currentOptions = questions.questions[state.i].answerOptions;
       const randomMap = {};
       const letters = Object.keys(currentOptions).slice();
@@ -53,6 +55,8 @@ const TriviaPage = props => {
       console.log('randomized map:', randomMap);
       randomizedState.correctAnswer = randomMap[state.correctAnswer];
       for (const option in state.answerOptions) {
+        console.log('letter accessed:', option)
+        console.log('answer given:', state.answerOptions[option]);
         randomizedState.answerOptions[randomMap[option]] = state.answerOptions[option];
       }
       setState(randomizedState);
