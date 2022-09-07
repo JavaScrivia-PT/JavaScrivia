@@ -21,7 +21,8 @@ export default function LoginPage (props) {
                 fetch(`/user?username=${document.getElementById('user1').value}`)
                 .then(response => response.json())
                 .then(data => {
-                    props.setScore(data);
+                    props.setScore(data.score);
+                    props.setProgress(data.progress);
                 })
                 .catch(err => console.log(err));
                 props.setUsername(document.getElementById('user1').value)

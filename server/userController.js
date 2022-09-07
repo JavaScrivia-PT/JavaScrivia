@@ -1,4 +1,4 @@
-// const { ModuleFilenameHelpers } = require('webpack');
+const { ModuleFilenameHelpers } = require('webpack');
 const db = require('./userModels');
 
 const userController = {};
@@ -105,27 +105,56 @@ const userController = {};
       .catch(err => console.log(err));
     };
 
-
+    //get progress as well 
     userController.getScore = (req, res, next) => {
       // console.log('we are inside the get score: ', req.query);
       const values = [req.query.username]
       const query = `
-      SELECT score
+      SELECT score, progress
       FROM user_final
       WHERE username=$1
       ;`;
       db.query(query, values)
       .then(response => {
-        res.locals.score = response.rows[0].score;
+        res.locals.data = {
+          score: response.rows[0].score,
+          progress: response.rows[0].progress
+        };
         return next();
       })
       .catch(err => {
         return next({
           log: 'error in get score middleware',
           status: 400,
-          essage: { err : 'error in get score middleware' },
+          message: { err : 'error in get score middleware' },
         })
       })
     };
+
+    //middleware function that on handleclick for the next question query for the username and progress and
+    //increment progress req.body
+    userController.updateProgress = (req, res, next) => {
+      const values = [req.body.username, req.body.progress]
+      const query = `
+        UPDATE user_final
+        SET progess = $2
+        WHERE username = $1;
+        `;
+      db.query(query, values)
+        .then(response => {
+          res.locals.data = {
+            progress: response.rows[0].progress
+          };
+          return next();
+        })
+        .catch(err => {
+          return next({
+            log: 'error in update progress middleware',
+            status: 400,
+            message: {err : 'error in upate progress middleware'},
+          })
+        })
+    }
+
 
 module.exports = userController;
