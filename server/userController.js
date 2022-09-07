@@ -1,4 +1,4 @@
-const { ModuleFilenameHelpers } = require('webpack');
+// const { ModuleFilenameHelpers } = require('webpack');
 const db = require('./userModels');
 
 const userController = {};
@@ -24,7 +24,7 @@ const userController = {};
         };
 
 
-
+    // rename
     userController.checkSign = (req, res, next) => { //post part 1
       console.log('we are in the check sign:  ', req.body.username);
       const values = [req.body.username];

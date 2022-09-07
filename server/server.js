@@ -8,6 +8,8 @@ app.use(express.json());
 
 app.use('/bundleFolder', express.static(path.join(__dirname, '../bundleFolder')));
 
+// refactor to add a router for the '/api' route and rename '/api' route
+
 app.post('/api', userController.checkSign, userController.createUser, (req, res) => {
   //post request from signup page
   return res.status(200).send(true); 
