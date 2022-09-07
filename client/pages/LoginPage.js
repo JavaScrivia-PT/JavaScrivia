@@ -23,10 +23,11 @@ export default function LoginPage (props) {
                 .then(data => {
                     props.setScore(data.score);
                     props.setProgress(data.progress);
+                    props.setUsername(document.getElementById('user1').value)
                 })
+                .then(() => navigateToTrivia())
                 .catch(err => console.log(err));
-                props.setUsername(document.getElementById('user1').value)
-                return navigateToTrivia();
+                
             } else {
                 return setMessage('Your username/password is incorrect')
             }

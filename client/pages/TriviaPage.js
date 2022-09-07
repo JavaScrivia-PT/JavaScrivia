@@ -16,12 +16,12 @@ const TriviaPage = props => {
     i: 0,
     codeSnippet: '',
     currentQuestion: '',
-    answerExplanation: '',
     answerOptions: {
       A: '',
       B: '',
       C: '',
       D: '',
+      E: ''
     },
     correctAnswer: '',
     answerExplanation: '',
@@ -35,6 +35,30 @@ const TriviaPage = props => {
   const logOut = () => {
     navigate('/landing');
   };
+
+  useEffect(() => {
+    if (questions) {
+      const randomizedState = {...state};
+      const currentOptions = questions.questions[state.i].answerOptions;
+      const randomMap = {};
+      const letters = Object.keys(currentOptions).slice();
+      letters.forEach(key => {
+        randomMap[key] = null;
+      });
+      for(const option in randomMap) {
+        const randIndex = Math.floor(Math.random() * letters.length);
+        randomMap[option] = letters[randIndex];
+        letters.splice(randIndex, 1);
+      }
+      console.log('randomized map:', randomMap);
+      randomizedState.correctAnswer = randomMap[state.correctAnswer];
+      for (const option in state.answerOptions) {
+        randomizedState.answerOptions[randomMap[option]] = state.answerOptions[option];
+      }
+      setState(randomizedState);
+      console.log(state);
+    }
+  }, [state.i])
 
   // refactor not to reload all questions on button click
 
@@ -64,7 +88,11 @@ const TriviaPage = props => {
 
   const changeQuestion = () => {
     if (clicked) {
-      const i = state.i + 1;
+      let i = state.i + 1;
+      if (i >= questions.questions.length) {
+        console.log('triggered overflow')
+        i = 0;
+      }
       console.log('sent progress', i)
       fetch('/api/updateProgress', {
         method: 'PATCH',
@@ -113,6 +141,7 @@ const TriviaPage = props => {
     fetch(`https://api.javascript-trivia.com/`)
       .then(res => res.json())
       .then(data => {
+        console.log(props.progress);
         setState({
           i: Number(props.progress),
           codeSnippet: data.questions[props.progress].codeSnippet,
@@ -122,7 +151,7 @@ const TriviaPage = props => {
           answerExplanation: data.questions[props.progress].answerExplanation,
         })
         setQuestions(data);
-      })
+      });
   }, [])
 
   // checks for correct answer and sets the score
@@ -145,9 +174,7 @@ const TriviaPage = props => {
       })
       .catch(err => console.log('error: ', err))
     } else if (e.target.innerHTML[0] !== state.correctAnswer && clicked === false) {
-      let incorrectTemp = incorrect;
-      setIncorrect(incorrectTemp + 1);
-
+      setIncorrect(incorrect + 1);
     }
     setClicked(true);
     setExplanation(true);
@@ -195,6 +222,11 @@ const TriviaPage = props => {
             {state.answerOptions.D && (
               <button onClick={e => changeBoolean(e)}>
                 D {state.answerOptions.D}{' '}
+              </button>
+            )}
+            {state.answerOptions.E && (
+              <button onClick={e => changeBoolean(e)}>
+                E {state.answerOptions.E}{' '}
               </button>
             )}
           </div>
