@@ -114,7 +114,7 @@ const TriviaPage = props => {
       .then(res => res.json())
       .then(data => {
         setState({
-          i: props.progress,
+          i: Number(props.progress),
           codeSnippet: data.questions[props.progress].codeSnippet,
           currentQuestion: data.questions[props.progress].question,
           answerOptions: data.questions[props.progress].answerOptions,
