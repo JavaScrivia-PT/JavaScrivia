@@ -27,6 +27,9 @@ const TriviaPage = props => {
     answerExplanation: '',
   });
 
+  const [progress, setProgress] = useState(props.progress);
+  const [accuracy, setAccuracy] = useState(0);
+;
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -82,6 +85,7 @@ const TriviaPage = props => {
   // };
 
   //this is essentially handleclick to determine which question we want to render
+
   const changeQuestion = () => {
     if (clicked) {
       let i = state.i + 1;
@@ -92,16 +96,29 @@ const TriviaPage = props => {
       console.log('sent progress', i)
       fetch('/api/updateProgress', {
         method: 'PATCH',
-          body: JSON.stringify({
-            username: props.username,
-            progress: i.toString(),
-          }),
-          headers: { 'Content-Type' : 'application/json' },
+        body: JSON.stringify({
+          username: props.username,
+          progress: i.toString(),
+        }),
+        headers: { 'Content-Type' : 'application/json' },
       })
       .then(res => res.json())
       .then(data => {
         console.log('data:', data);
         const i = Number(data.progress);
+        setProgress(data.progress);
+        let newAccuracy; 
+        console.log('i: ', i)
+        console.log('props.score: ', props.score)
+        if(i === 0) {
+          newAccuracy = 0;
+        } else {
+          newAccuracy = Math.floor((props.score / i) * 100) ;
+        }
+        console.log('newAccuracy: ',newAccuracy)
+        setAccuracy(newAccuracy)
+        console.log('props.score: ', props.score);
+        console.log('i: ', i);
         console.log('recieved response', i);
         setState({
           i,
@@ -117,7 +134,7 @@ const TriviaPage = props => {
       setClicked(false);
     }
   }
-
+  
   //useffect hook allows us to emulate a component did mount in order to to make the fetch call once, 
   //we will just grab our questions from this big variable from now on
   useEffect(() => {
@@ -151,7 +168,10 @@ const TriviaPage = props => {
         headers: { 'Content-Type' : 'application/json' },
       })
       .then(res => res.json())
-      .then(data => props.setScore(temp))
+      .then(data => {
+        console.log('score data: ',data)
+        props.setScore(temp)
+      })
       .catch(err => console.log('error: ', err))
     } else if (e.target.innerHTML[0] !== state.correctAnswer && clicked === false) {
       setIncorrect(incorrect + 1);
@@ -163,9 +183,13 @@ const TriviaPage = props => {
   // completed {progress} out of {questions.questions.length} percent complete: {Math.floor(progress / questions.questions.length * 100)}
 
   // maybe break down into different react components
+
+  //Math.floor((accuracy/progress * 100))
   return (
     <div className="wrapper">
       <h1 className="landingH1">It's Time To Get JavaSavvyyyy</h1>
+          <h2 className="percentage">Progress {Math.floor((progress/155) * 100)}%</h2>
+          <h2 className="accuracy">Accuracy {accuracy}% </h2>
       <div className="mainContainer">
         <div className="triviaContainer">
           <div className="codeSnippet">
