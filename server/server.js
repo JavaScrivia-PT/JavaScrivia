@@ -32,13 +32,20 @@ app.get('/board', userController.leaderBoard, (req, res) => {
 
 app.get('/user', userController.getScore, (req, res) => {
   console.log('inside app.get for /user: ', res.locals.score)
-  return res.status(200).json(res.locals.score);
+  return res.status(200).json(res.locals.data);
 });
 
 app.get('/', (req, res) => {
   //serve webpack production index.html
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
+
+
+//new route for progress update
+app.patch('/api/updateProgress', userController.updateProgress ,(req, res) => {
+  return res.status(200).json(res.locals.data);
+} )
+
 
 //catch all route handler
 app.use('*', (req, res) => {
