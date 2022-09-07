@@ -28,7 +28,7 @@ const TriviaPage = props => {
   });
 
   const [progress, setProgress] = useState(props.progress);
-  const [accuracy, setAccuracy] = useState(0);
+  const [accuracy, setAccuracy] = useState(0/*state.i === 0 ? 0 : (Math.floor(props.score / state.i)) * 100*/);
 ;
   const navigate = useNavigate();
 
@@ -155,6 +155,8 @@ const TriviaPage = props => {
           answerExplanation: data.questions[props.progress].answerExplanation,
         })
         setQuestions(data);
+        console.log('score:', props.score, 'progress:', props.progress, 'intended accuracy:', Math.floor((props.score / Number(props.progress)) * 100));
+        setAccuracy(Number(props.progress) === 0 ? 0 : Math.floor((props.score / Number(props.progress)) * 100))
       });
   }, [])
 
