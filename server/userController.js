@@ -1,22 +1,21 @@
 const { ModuleFilenameHelpers } = require('webpack');
 const db = require('./userModels');
+const bcrypt = require('bcryptjs');
 
 const userController = {};
 
-    userController.createUser = (req, res, next) => { //post part 2
-        //post request req.body.
-        // console.log('inside create user: ', req.body);
-      const values = [req.body.username, req.body.password, 0];
+    userController.createUser = async (req, res, next) => { //post part 2
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(req.body.password, salt);
+      const values = [req.body.username, password, 0];
         const query = `INSERT INTO user_final (username, password, score) VALUES ($1, $2, $3);`; 
             db.query(query, values)
             .then(response => {
-                // console.log('inside db query create user: ', response);
-                // res.locals.user = response;
                 return next();
             })
             .catch(err => {
             return next({
-                log: 'Express error handler caught unknown middleware error',
+                log: 'Express error handler caught userController.createUser error',
                 status: 400,
                 message: { err : 'error in create user middleware' },
             });
@@ -50,23 +49,25 @@ const userController = {};
 
     userController.checkLog = (req, res, next) => { //get request
         //localhost:3000/api?username=mike&password=mezh
-        //req.query.username and req.query.password
-      const values = [req.query.username, req.query.password];
-      // console.log('Making sure this is username / password', values);
+      const values = [req.query.username];
+      const password = req.query.password;
       const query = `SELECT "username", "password" 
       FROM user_final
-      WHERE username = $1 AND password = $2;
+      WHERE username = $1;
       `;
       db.query(query, values)
         .then((data) => {
-          //console.log('username and password exists in DB', data.rows[0]);
-          if (!data.rows.length) {
-            res.locals.exists = false;
+          if (data.rows.length) {
+            bcrypt.compare(password, data.rows[0].password)
+            .then(match => {
+              if (match) res.locals.exists = true;
+              else res.locals.exists = false;
+              return next();
+            })
           } else {
-            res.locals.exists = true;
+            res.locals.exists = false;
+            return next();
           }
-          console.log(res.locals.exists);
-          return next();
         })
         .catch(err => console.log(err));
 
