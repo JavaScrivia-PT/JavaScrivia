@@ -135,14 +135,18 @@ const userController = {};
     //middleware function that on handleclick for the next question query for the username and progress and
     //increment progress req.body
     userController.updateProgress = (req, res, next) => {
+      console.log(req.body);
       const values = [req.body.username, req.body.progress]
+      const queryGet = `SELECT progress FROM user_final WHERE username = '${req.body.username}'`
       const query = `
         UPDATE user_final
-        SET progess = $2
+        SET progress = $2
         WHERE username = $1;
         `;
       db.query(query, values)
+        .then(() => db.query(queryGet))
         .then(response => {
+          console.log(response.rows);
           res.locals.data = {
             progress: response.rows[0].progress
           };
@@ -152,7 +156,7 @@ const userController = {};
           return next({
             log: 'error in update progress middleware',
             status: 400,
-            message: {err : 'error in upate progress middleware'},
+            message: {err : 'error in update progress middleware'},
           })
         })
     }
