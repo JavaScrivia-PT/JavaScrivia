@@ -53,6 +53,7 @@ const TriviaPage = props => {
         randomizedState.answerOptions[randomMap[option]] = state.answerOptions[option];
       }
       setState(randomizedState);
+      console.log(state);
     }
   }, [state.i])
 
@@ -84,7 +85,10 @@ const TriviaPage = props => {
   const changeQuestion = () => {
     if (clicked) {
       let i = state.i + 1;
-      if (i >= questions.questions.length) i = 0;
+      if (i >= questions.questions.length) {
+        console.log('triggered overflow')
+        i = 0;
+      }
       console.log('sent progress', i)
       fetch('/api/updateProgress', {
         method: 'PATCH',
@@ -120,8 +124,9 @@ const TriviaPage = props => {
     fetch(`https://api.javascript-trivia.com/`)
       .then(res => res.json())
       .then(data => {
+        console.log(props.progress);
         setState({
-          i: props.progress,
+          i: Number(props.progress),
           codeSnippet: data.questions[props.progress].codeSnippet,
           currentQuestion: data.questions[props.progress].question,
           answerOptions: data.questions[props.progress].answerOptions,
