@@ -31,7 +31,7 @@ app.get('/board', userController.leaderBoard, (req, res) => {
 });
 
 app.get('/user', userController.getScore, (req, res) => {
-  console.log('inside app.get for /user: ', res.locals.score)
+  console.log('inside app.get for /user: ', res.locals.data)
   return res.status(200).json(res.locals.data);
 });
 

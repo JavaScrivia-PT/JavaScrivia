@@ -13,7 +13,7 @@ const TriviaPage = props => {
   const [correct, setCorrect] = useState(0);
   const [questions, setQuestions] = useState(null)
   const [state, setState] = useState({
-    i: props.progress,
+    i: 0,
     codeSnippet: '',
     currentQuestion: '',
     answerExplanation: '',
@@ -61,6 +61,7 @@ const TriviaPage = props => {
   const changeQuestion = () => {
     if (clicked) {
       const i = state.i + 1;
+      console.log('sent progress', i)
       fetch('/api/updateProgress', {
         method: 'PATCH',
           body: JSON.stringify({
@@ -71,7 +72,9 @@ const TriviaPage = props => {
       })
       .then(res => res.json())
       .then(data => {
+        console.log('data:', data);
         const i = Number(data.progress);
+        console.log('recieved response', i);
         setState({
           i,
           codeSnippet: questions.questions[i].codeSnippet,
@@ -94,12 +97,12 @@ const TriviaPage = props => {
       .then(res => res.json())
       .then(data => {
         setState({
-          i: state.i,
-          codeSnippet: data.questions[state.i].codeSnippet,
-          currentQuestion: data.questions[state.i].question,
-          answerOptions: data.questions[state.i].answerOptions,
-          correctAnswer: data.questions[state.i].correctAnswer,
-          answerExplanation: data.questions[state.i].answerExplanation,
+          i: props.progress,
+          codeSnippet: data.questions[props.progress].codeSnippet,
+          currentQuestion: data.questions[props.progress].question,
+          answerOptions: data.questions[props.progress].answerOptions,
+          correctAnswer: data.questions[props.progress].correctAnswer,
+          answerExplanation: data.questions[props.progress].answerExplanation,
         })
         setQuestions(data);
       })
@@ -129,6 +132,8 @@ const TriviaPage = props => {
     setClicked(true);
     setExplanation(true);
   };
+
+  // completed {progress} out of {questions.questions.length} percent complete: {Math.floor(progress / questions.questions.length * 100)}
 
   // maybe break down into different react components
   return (
