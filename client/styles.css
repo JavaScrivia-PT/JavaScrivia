@@ -194,6 +194,13 @@ h3 {
   font-size: 80px;
 }
 
+.wrapper h2 {
+  color: darkcyan;
+  font-family: 'Brush Script MT', cursive;
+  font-size: 40px;
+  text-align: center;
+}
+
 .wrapper button {
   width: 150px;
   height: 50px;
