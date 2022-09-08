@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import LeaderBoard from './LeaderBoard';
 import Answer from './Answer';
 import Favorite from './Favorite';
+import FavoritesDisplay from './FavoritesDisplay';
 // import { useEffect } from 'react/cjs/react.production.min';
 
 
@@ -30,7 +31,8 @@ const TriviaPage = props => {
 
   const [progress, setProgress] = useState(props.progress);
   const [accuracy, setAccuracy] = useState(0/*state.i === 0 ? 0 : (Math.floor(props.score / state.i)) * 100*/);
-;
+  const [ isFavorite, setIsFavorite ] = useState(false);
+
   const navigate = useNavigate();
 
   const logOut = () => {
@@ -231,7 +233,7 @@ const TriviaPage = props => {
           <button onClick={e => reset()}> Reset Score and Progress</button>
       <div className="mainContainer">
         <div className="triviaContainer">
-          <Favorite username={props.username} question={state.i}/>
+          <Favorite username={props.username} question={state.i} isFavorite={isFavorite} setIsFavorite={setIsFavorite}/>
           <div className="codeSnippet">
             <p className="codesnippet">
               
@@ -291,7 +293,9 @@ const TriviaPage = props => {
         <div className="leaderboardContainer">
           <h2>High Scores:</h2>
           <LeaderBoard score={props.score}/>
+          <FavoritesDisplay username={props.username} isFavorite={isFavorite}/>
         </div>
+        
       </div>
     </div>
   );

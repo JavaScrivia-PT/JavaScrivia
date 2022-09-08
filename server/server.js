@@ -55,6 +55,10 @@ app.get('/favorites', userController.checkFavorites, (req, res) => {
   return res.status(200).json(res.locals.isFavorite);
 })
 
+app.get('/allfavorites', userController.getUserFavorites, (req, res) => {
+  return res.status(200).json(res.locals.data);
+})
+
 
 //new route for progress update
 app.patch('/api/updateProgress', userController.updateProgress ,(req, res) => {
