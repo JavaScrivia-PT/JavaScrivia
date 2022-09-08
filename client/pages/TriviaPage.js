@@ -291,8 +291,6 @@ const TriviaPage = props => {
           <button className="landingButton" onClick={logOut}>Sign Out</button>
         </div>
         <div className="leaderboardContainer">
-          <h2>High Scores:</h2>
-          <LeaderBoard score={props.score}/>
           <h2>LEADERBOARD</h2>
           <LeaderBoard score={props.score} progress={props.progress} setProgress={props.setProgress}/>
           <FavoritesDisplay username={props.username} isFavorite={isFavorite}/>

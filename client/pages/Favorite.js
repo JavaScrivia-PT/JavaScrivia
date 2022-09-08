@@ -18,7 +18,7 @@ const Favorite = props => {
   }, [props.question])
 
   const handleClick = () => {
-    if(!isFavorite) {
+    if(!props.isFavorite) {
       fetch('/favorites',
         {
           method: 'POST',
