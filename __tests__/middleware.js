@@ -1,16 +1,71 @@
-const {
-  leaderBoard,
-  getScore,
-  updateProgress,
-} = require('../server/userController.js');
+const fs = require('fs');
+const path = require('path');
+const { leaderBoard, getScore, updateProgress, createUser, checkSign, checkLog, updateScore } = require('../server/userController.js');
 const db = require('../server/userModels');
 
+
 describe('db unit tests', () => {
-  beforeAll((done) => {
-    const values = ['Test', 'Test', 0];
-    const query = `INSERT INTO user_final (username, password, score) VALUES ($1, $2, $3);`;
-    db.query(query, values).then(() => done());
-  });
+  describe('createUser', () => {
+    it('creates a new user', async () => {
+      const request = {body: {username: 'Test', password: 'Test', score: 0}};
+      const response = { locals: {} };
+      const result = await new Promise((resolve) => {
+        createUser(request, response, (err) => {
+          if (!err) {
+            resolve(response.locals.board);
+          }
+        });
+      });
+      expect(result).not.toBeInstanceOf(Error);
+    });
+  })
+  describe('checkSign', () => {
+    it('requires unique username', async () => {
+      const request = {body: {username: 'fakeuserTest'}};
+      const response = { locals: {}
+    };
+      const result = await new Promise((resolve) => {
+        checkSign(request, response, (err) => {
+          if (!err) {
+            resolve(response.locals.exists);
+          }
+        });
+      });
+      expect(result).not.toBeInstanceOf(Error);
+    });
+  })
+
+
+  describe('checkLog', () => {
+    it('check if provided user credentials at login are valid in the database', async () => {
+      const request = {query: {username: 'Test', password: 'Test'}};
+      const response = { locals: {} };
+      const result = await new Promise((resolve) => {
+        checkLog(request, response, (err) => {
+          if (!err) {
+            resolve(response.locals.exists);
+          }
+        });
+      });
+      expect(response.locals.exists).toBeTruthy();
+    });
+  })
+  describe('updateScore', () => {
+    it('check if score updates', async () => {
+      const request = {query: {username: 'Test', password: '123'}};
+      const response = { locals: {} };
+      const result = await new Promise((resolve) => {
+        checkLog(request, response, (err) => {
+          if (!err) {
+            resolve(response.locals.exists);
+          }
+        });
+      });
+
+      expect(result).not.toBeInstanceOf(Error);
+    });
+  })
+
   describe('leaderBoard', () => {
     it('returns all usernames and corresponding scores from database as array', async () => {
       const request = {};
@@ -27,7 +82,7 @@ describe('db unit tests', () => {
       expect(Array.isArray(result)).toBe(true);
       expect(Array.isArray(boardPayload)).toBe(true);
       expect(result).toBe(boardPayload);
-      expect(result[result.length - 1]).toEqual({ username: 'Test', score: 0 });
+      expect(result[result.length - 1]).toEqual({username: 'Test', score: 0})
     });
   });
   describe('getScore', () => {
@@ -45,7 +100,7 @@ describe('db unit tests', () => {
       expect(result).not.toBeInstanceOf(Error);
       expect(typeof result).toBe('object');
       expect(data.score).toBe(0);
-      expect(data.progress).toBe('0');
+      expect(data.progress).toBe("0");
     });
   });
   describe('updateProgress', () => {
@@ -66,7 +121,7 @@ describe('db unit tests', () => {
     });
   });
   afterAll((done) => {
-    const query = "DELETE FROM user_final WHERE username = 'Test';";
-    db.query(query).then(() => done());
-  });
+    const query = "DELETE FROM user_final WHERE username = 'Test';"
+    db.query(query).then(()=> done());
+  })
 });
