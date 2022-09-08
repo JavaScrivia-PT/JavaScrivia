@@ -20,6 +20,10 @@ Our group had a couple stretch goals that we would have liked to complete given 
 # Technical Difficulities
 Rendering Browser router components in testing-library/react
 Asynchronicity issues with the unit testing
+Managing state in this complex frontend heavy project
+Using the pre-existing SQL database provided problems with encrypted password length
+As the scope of the application grew, tracking bugs became more and more difficult
+
 
 **Model of our UI/UX idea**
 ![IMG_3885](https://user-images.githubusercontent.com/13509166/189236094-e90dcae7-d09e-4917-890a-b16f7e7db05f.jpg)
