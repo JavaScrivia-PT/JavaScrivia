@@ -22,6 +22,7 @@ export default function SignupPage (props) {
             if (response) {
                 props.setUsername(document.getElementById('user').value);
                 props.setScore(0);
+                props.setProgress('0');
                 return navigateToTrivia();
             } else {
                 return setMessage('Your username/password already exist, please try again');
@@ -37,7 +38,7 @@ export default function SignupPage (props) {
             <div className="signInArea">
             <form className="formsArea">
                 <input className="landingInput" id="user" type="text" placeholder="username"></input>
-                <input className="landingInput" id="pass" type="text" placeholder="password"></input>
+                <input className="landingInput" id="pass" type="password" placeholder="password"></input>
             </form>
             <h3>{message}</h3>
             <button className="landingButton" onClick={handleSignup}>enter</button>

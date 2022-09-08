@@ -41,7 +41,7 @@ export default function LoginPage (props) {
             <div className="signInArea">
             <form className="formsArea">
                 <input className="landingInput" type="text" id="user1" placeholder="username"></input>
-                <input className="landingInput" type="text" id="pass1" placeholder="password"></input>
+                <input className="landingInput" type="password" id="pass1" placeholder="password"></input>
             </form>
             <h3>{message}</h3>
             <button className="landingButton" onClick={handleSubmit}>enter</button>

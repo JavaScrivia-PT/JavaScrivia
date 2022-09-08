@@ -29,7 +29,7 @@ const TriviaPage = props => {
     answerExplanation: '',
   });
 
-  const [progress, setProgress] = useState(props.progress);
+  //const [progress, setProgress] = useState(props.progress);
   const [accuracy, setAccuracy] = useState(0/*state.i === 0 ? 0 : (Math.floor(props.score / state.i)) * 100*/);
   const [ isFavorite, setIsFavorite ] = useState(false);
 
@@ -113,7 +113,7 @@ const TriviaPage = props => {
       .then(data => {
         console.log('data:', data);
         const i = Number(data.progress);
-        setProgress(data.progress);
+        props.setProgress(data.progress);
         let newAccuracy; 
         console.log('i: ', i)
         console.log('props.score: ', props.score)
@@ -206,7 +206,7 @@ const TriviaPage = props => {
       .then(data => {
        // console.log('resetData: ', data);
         //console.log('data.progress: ', data.progress);
-        setProgress(data.progress);
+        props.setProgress(data.progress);
         props.setScore(data.score);
         setAccuracy(0);
         setState({    i: 0,
@@ -228,7 +228,8 @@ const TriviaPage = props => {
   return (
     <div className="wrapper">
       <h1 className="landingH1">It's Time To Get JavaSavvyyyy</h1>
-          <h2 className="percentage">Progress {Math.floor((progress/155) * 100)}%</h2>
+          <h2>Name: {props.username}</h2>
+          <h2 className="percentage">Progress {Math.floor((props.progress/155) * 100)}% {`(${props.progress}/155)`}</h2>
           <h2 className="accuracy">Accuracy {accuracy}% </h2>
           <button onClick={e => reset()}> Reset Score and Progress</button>
       <div className="mainContainer">
@@ -281,18 +282,19 @@ const TriviaPage = props => {
             )}
           </div>
           <div className="incorrectAnswer">
-            Correctly Answered: {correct} <br/>
-            Incorrectly Answered: {incorrect}
+            Correctly Answered This Session: {correct} <br/>
+            Incorrectly Answered This Session: {incorrect}
           </div>
         </div>
         <div className="nameAndButtons">
-          <h2>Name: {props.username}</h2>
           <button className="landingButton" onClick={changeQuestion}>Next Question</button>
           <button className="landingButton" onClick={logOut}>Sign Out</button>
         </div>
         <div className="leaderboardContainer">
           <h2>High Scores:</h2>
           <LeaderBoard score={props.score}/>
+          <h2>LEADERBOARD</h2>
+          <LeaderBoard score={props.score} progress={props.progress} setProgress={props.setProgress}/>
           <FavoritesDisplay username={props.username} isFavorite={isFavorite}/>
         </div>
         

@@ -95,7 +95,7 @@ const userController = {};
 
     userController.leaderBoard = (req, res, next) => { //get request
       const query = `
-      SELECT username, score
+      SELECT username, score, progress
       FROM user_final
       ;`;
       db.query(query)
