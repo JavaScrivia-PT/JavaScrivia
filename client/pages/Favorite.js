@@ -10,6 +10,8 @@ const Favorite = props => {
         console.log('isFavorite:', isFavorite)
         if (isFavorite) {
           setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
         }
       })
       .catch(err => console.log('error: ', err))
