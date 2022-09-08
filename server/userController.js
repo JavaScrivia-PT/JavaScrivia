@@ -1,6 +1,7 @@
 const { ModuleFilenameHelpers } = require('webpack');
 const db = require('./userModels');
 const bcrypt = require('bcryptjs');
+const { user } = require('pg/lib/defaults');
 
 const userController = {};
 
@@ -157,6 +158,95 @@ const userController = {};
             log: 'error in update progress middleware',
             status: 400,
             message: {err : 'error in update progress middleware'},
+          })
+        })
+    }
+
+    userController.addToFavorites = (req, res, next) => {
+      const { username, question } = req.body;
+      const values = [username, question];
+      const query = `
+        INSERT INTO user_favorites(username, question)
+        VALUES($1, $2);`;
+      db.query(query, values)
+        .then(() => next())
+        .catch(err => {
+          return next({
+            log: 'error in add to favorites middleware',
+            status: 400,
+            message: {err : 'error in add to favorites middleware'},
+          })
+        })
+    }
+
+    userController.removeFromFavorites = (req, res, next) => {
+      const { username, question } = req.body;
+      const values = [username, question];
+      const query = `
+        DELETE FROM user_favorites
+        WHERE username = $1 AND question = $2`;
+      db.query(query, values)
+        .then(() => next())
+        .catch(err => {
+          return next({
+            log: 'error in add to favorites middleware',
+            status: 400,
+            message: {err : 'error in add to favorites middleware'},
+          })
+        })
+    }
+
+    userController.checkFavorites = (req, res, next) => {
+      const { username, question } = req.query;
+      const values = [username, question];
+      const query = `
+        SELECT * FROM user_favorites
+        WHERE username = $1 AND question = $2;`;
+      db.query(query, values)
+        .then(data => {
+          if (data.rows.length) {
+            res.locals.isFavorite = true;
+          } else {
+            res.locals.isFavorite = false;
+          }
+          return next();
+        })
+        .catch(err => {
+          return next({
+            log: 'error in check favorites middleware',
+            status: 400,
+            message: {err : 'error in check favorites middleware'},
+          })
+        })
+    }
+
+
+    //middleware function that resets the score and progress
+    userController.reset = (req, res, next) => {
+      const values = [req.body.username];
+      //console.log('this is the reset req.body', req.body)
+      const queryReset = `
+      UPDATE user_final
+      SET progress = 0, score = 0
+      WHERE username = $1;
+      `;
+      const getReset = `SELECT progress, score FROM user_final where username = '${req.body.username}' `
+      db.query(queryReset, values)
+        .then(() => db.query(getReset))
+        .then(response => {
+          //console.log('resetResponse: ', response)
+          res.locals.data = {
+            progress: response.rows[0].progress,
+            score: response.rows[0].score
+          }
+          //console.log('res.locals.data: ',res.locals.data);
+          return next();
+        })
+        .catch(err => {
+          return next({
+            log: 'error in reset middleware',
+            status: 400,
+            message: {err : 'error in reset middleware'},
           })
         })
     }

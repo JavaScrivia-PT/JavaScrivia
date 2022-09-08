@@ -19,6 +19,7 @@ module.exports = {
       '/api' : 'http://localhost:3000',
       '/board' : 'http://localhost:3000',
       '/user' : 'http://localhost:3000',
+      '/favorites' : 'http://localhost:3000'
     },
     compress: false,
     host: 'localhost',

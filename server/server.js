@@ -40,11 +40,31 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
+// post to favorite questions table
+app.post('/favorites', userController.addToFavorites, (req, res) => {
+  return res.status(200).json('question added to favorites');
+})
+
+// delete from questions table
+app.delete('/favorites', userController.removeFromFavorites, (req, res) => {
+  return res.status(200).json('question removed from favorites');
+})
+
+// check if question is favorited
+app.get('/favorites', userController.checkFavorites, (req, res) => {
+  return res.status(200).json(res.locals.isFavorite);
+})
+
 
 //new route for progress update
 app.patch('/api/updateProgress', userController.updateProgress ,(req, res) => {
   return res.status(200).json(res.locals.data);
 } )
+
+//new router for resetting the progress and the score 
+app.patch('/api/resetScore', userController.reset, (req, res) => {
+  return res.status(200).json(res.locals.data);
+})
 
 
 //catch all route handler
