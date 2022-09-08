@@ -220,6 +220,19 @@ const userController = {};
         })
     }
 
+    userController.getUserFavorites = (req, res, next) => {
+      const { username } = req.query;
+      const values = [username];
+      const query = `
+        SELECT question FROM user_favorites
+        WHERE username = $1`;
+      db.query(query, values)
+        .then(data => {
+          res.locals.data = data.rows;
+          return next();
+        })
+    }
+
 
     //middleware function that resets the score and progress
     userController.reset = (req, res, next) => {

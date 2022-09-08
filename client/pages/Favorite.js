@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 const Favorite = props => {
-  const [ isFavorite, setIsFavorite ] = useState(false);
 
   useEffect(() => {
     fetch(`/favorites?username=${props.username}&question=${props.question}`)
@@ -9,14 +8,20 @@ const Favorite = props => {
       .then(isFavorite => {
         console.log('isFavorite:', isFavorite)
         if (isFavorite) {
+<<<<<<< HEAD
+          props.setIsFavorite(true);
+        } else {
+          props.setIsFavorite(false);
+=======
           setIsFavorite(true);
         } else {
           setIsFavorite(false);
+>>>>>>> dev
         }
       })
       .catch(err => console.log('error: ', err))
 
-  }, [])
+  }, [props.question])
 
   const handleClick = () => {
     if(!isFavorite) {
@@ -29,7 +34,7 @@ const Favorite = props => {
         .then(res => res.json())
         .then(res => {
           console.log(res);
-          setIsFavorite(true);
+          props.setIsFavorite(true);
         })
         .catch(err => console.log('error: ', err))
     }
@@ -43,7 +48,7 @@ const Favorite = props => {
         .then(res => res.json())
         .then(res => {
           console.log(res);
-          setIsFavorite(false);
+          props.setIsFavorite(false);
         })
         .catch(err => console.log('error: ', err))
 
@@ -52,7 +57,7 @@ const Favorite = props => {
 
   return(
     <div className='favorite'>
-      <button className={isFavorite ? 'favbutton' : 'notfavbutton'} onClick={handleClick}>{isFavorite ? 'Unfavorite' : 'Favorite'}</button>
+      <button className={props.isFavorite ? 'favbutton' : 'notfavbutton'} onClick={handleClick}>{props.isFavorite ? 'Unfavorite' : 'Favorite'}</button>
     </div>
   )
 }
