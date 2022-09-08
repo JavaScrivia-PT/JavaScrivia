@@ -231,7 +231,6 @@ const TriviaPage = props => {
           <h2>Name: {props.username}</h2>
           <h2 className="percentage">Progress {Math.floor((props.progress/155) * 100)}% {`(${props.progress}/155)`}</h2>
           <h2 className="accuracy">Accuracy {accuracy}% </h2>
-          <button onClick={e => reset()}> Reset Score and Progress</button>
       <div className="mainContainer">
         <div className="triviaContainer">
           <Favorite username={props.username} question={state.i} isFavorite={isFavorite} setIsFavorite={setIsFavorite}/>
@@ -287,7 +286,8 @@ const TriviaPage = props => {
           </div>
         </div>
         <div className="nameAndButtons">
-          <button className="landingButton" onClick={changeQuestion}>Next Question</button>
+          <button onClick={e => reset()}> Reset Score and Progress</button><br />
+          <button className="landingButton" onClick={changeQuestion}>Next Question</button><br />
           <button className="landingButton" onClick={logOut}>Sign Out</button>
         </div>
         <div className="leaderboardContainer">
