@@ -8,15 +8,9 @@ const Favorite = props => {
       .then(isFavorite => {
         console.log('isFavorite:', isFavorite)
         if (isFavorite) {
-<<<<<<< HEAD
           props.setIsFavorite(true);
         } else {
           props.setIsFavorite(false);
-=======
-          setIsFavorite(true);
-        } else {
-          setIsFavorite(false);
->>>>>>> dev
         }
       })
       .catch(err => console.log('error: ', err))
