@@ -162,4 +162,35 @@ const userController = {};
     }
 
 
+    //middleware function that resets the score and progress
+    userController.reset = (req, res, next) => {
+      const values = [req.body.username];
+      //console.log('this is the reset req.body', req.body)
+      const queryReset = `
+      UPDATE user_final
+      SET progress = 0, score = 0
+      WHERE username = $1;
+      `;
+      const getReset = `SELECT progress, score FROM user_final where username = '${req.body.username}' `
+      db.query(queryReset, values)
+        .then(() => db.query(getReset))
+        .then(response => {
+          //console.log('resetResponse: ', response)
+          res.locals.data = {
+            progress: response.rows[0].progress,
+            score: response.rows[0].score
+          }
+          //console.log('res.locals.data: ',res.locals.data);
+          return next();
+        })
+        .catch(err => {
+          return next({
+            log: 'error in reset middleware',
+            status: 400,
+            message: {err : 'error in reset middleware'},
+          })
+        })
+    }
+
+
 module.exports = userController;
