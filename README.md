@@ -18,11 +18,12 @@ Once we successfully achieved our MVP goals we began integrating new features. T
 Our group had a couple stretch goals that we would have liked to complete given more time. One such goal was to randomize the order of the questions as well, rather than having them travel linearly. We also considered some small changes like adding a timer, or a coding sandbox for the client to type code into. Our more extensive stretch goals would include returning questions that clients were weaker at, and implementing functionality that allowed users to create their own quiz packs with their own questions. 
 
 # Technical Difficulities
-Rendering Browser router components in testing-library/react
-Asynchronicity issues with the unit testing
-Managing state in this complex frontend heavy project
-Using the pre-existing SQL database provided problems with encrypted password length
-As the scope of the application grew, tracking bugs became more and more difficult
+***
+*Rendering Browser router components in testing-library/react
+*Asynchronicity issues with the unit testing
+*Managing state in this complex frontend heavy project
+*Using the pre-existing SQL database provided problems with encrypted password length
+*As the scope of the application grew, tracking bugs became more and more difficult
 
 
 **Model of our UI/UX idea**
