@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LeaderBoard from './LeaderBoard';
 import Answer from './Answer';
+import Favorite from './Favorite';
 // import { useEffect } from 'react/cjs/react.production.min';
 
 
@@ -52,11 +53,11 @@ const TriviaPage = props => {
         randomMap[option] = letters[randIndex];
         letters.splice(randIndex, 1);
       }
-      console.log('randomized map:', randomMap);
+      // console.log('randomized map:', randomMap);
       randomizedState.correctAnswer = randomMap[state.correctAnswer];
       for (const option in state.answerOptions) {
-        console.log('letter accessed:', option)
-        console.log('answer given:', state.answerOptions[option]);
+        // console.log('letter accessed:', option)
+        // console.log('answer given:', state.answerOptions[option]);
         randomizedState.answerOptions[randomMap[option]] = state.answerOptions[option];
       }
       setState(randomizedState);
@@ -230,6 +231,7 @@ const TriviaPage = props => {
           <button onClick={e => reset()}> Reset Score and Progress</button>
       <div className="mainContainer">
         <div className="triviaContainer">
+          <Favorite username={props.username} question={state.i}/>
           <div className="codeSnippet">
             <p className="codesnippet">
               
