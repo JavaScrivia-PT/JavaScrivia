@@ -61,6 +61,11 @@ app.patch('/api/updateProgress', userController.updateProgress ,(req, res) => {
   return res.status(200).json(res.locals.data);
 } )
 
+//new router for resetting the progress and the score 
+app.patch('/api/resetScore', userController.reset, (req, res) => {
+  return res.status(200).json(res.locals.data);
+})
+
 
 //catch all route handler
 app.use('*', (req, res) => {

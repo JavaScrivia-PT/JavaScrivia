@@ -29,7 +29,7 @@ const TriviaPage = props => {
   });
 
   const [progress, setProgress] = useState(props.progress);
-  const [accuracy, setAccuracy] = useState(0);
+  const [accuracy, setAccuracy] = useState(0/*state.i === 0 ? 0 : (Math.floor(props.score / state.i)) * 100*/);
 ;
   const navigate = useNavigate();
 
@@ -156,6 +156,8 @@ const TriviaPage = props => {
           answerExplanation: data.questions[props.progress].answerExplanation,
         })
         setQuestions(data);
+        console.log('score:', props.score, 'progress:', props.progress, 'intended accuracy:', Math.floor((props.score / Number(props.progress)) * 100));
+        setAccuracy(Number(props.progress) === 0 ? 0 : Math.floor((props.score / Number(props.progress)) * 100))
       });
   }, [])
 
@@ -185,7 +187,38 @@ const TriviaPage = props => {
     setExplanation(true);
   };
 
-  // completed {progress} out of {questions.questions.length} percent complete: {Math.floor(progress / questions.questions.length * 100)}
+  
+  //make a reset button handle click that makes a fetch patch request to the backend 
+  //make a router for that patch request 
+  //make the middleware that queries the db and updates it with the progress and score set to 0
+  //make another fetch req on the front end that queries the db for that new progress and score value
+  const reset = () => {
+    fetch('/api/resetScore', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        username: props.username,
+      }),
+      headers: { 'Content-Type' : 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => {
+       // console.log('resetData: ', data);
+        //console.log('data.progress: ', data.progress);
+        setProgress(data.progress);
+        props.setScore(data.score);
+        setAccuracy(0);
+        setState({    i: 0,
+          codeSnippet: questions.questions[0].codeSnippet,
+          currentQuestion: questions.questions[0].question,
+          answerOptions: questions.questions[0].answerOptions,
+          correctAnswer: questions.questions[0].correctAnswer,
+          answerExplanation: questions.questions[0].answerExplanation,})
+        //console.log('state: ', state);
+        //console.log('data.score: ', data.score)
+        setIncorrect(0);
+        setCorrect(0);
+      })
+  }
 
   // maybe break down into different react components
 
@@ -195,6 +228,7 @@ const TriviaPage = props => {
       <h1 className="landingH1">It's Time To Get JavaSavvyyyy</h1>
           <h2 className="percentage">Progress {Math.floor((progress/155) * 100)}%</h2>
           <h2 className="accuracy">Accuracy {accuracy}% </h2>
+          <button onClick={e => reset()}> Reset Score and Progress</button>
       <div className="mainContainer">
         <div className="triviaContainer">
           <Favorite username={props.username} question={state.i}/>
