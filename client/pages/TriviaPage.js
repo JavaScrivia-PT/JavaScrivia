@@ -204,7 +204,7 @@ const TriviaPage = props => {
       .then(data => {
        // console.log('resetData: ', data);
         //console.log('data.progress: ', data.progress);
-        setProgress(data.progress);
+        props.setProgress(data.progress);
         props.setScore(data.score);
         setAccuracy(0);
         setState({    i: 0,
