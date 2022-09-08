@@ -1,43 +1,42 @@
-# JavaScrivia
-a trivia app for JavaScript
+# Iteration on JavaScrivia
+A trivia app for JavaScript
 
-## Welcome!
-JavaScrivia is a beginner's alternative to sites like LeetCode for practicing JavaScript. It utilizes React infrastructure, Express, a local API and an external API.
+# Overview
+With this iteration project we aimed to overhaul and refactor the pre-existing legacy code created by team Axolotl.
 
-## How is data stored?
-All of the data for our users is stored in a locally created SQL database. Each row in our SQL table keeps track of a user's username, password, and score.
+# Here's what we changed: 
 
-## How does the sign-in process work?
-All of our React routes are stored in our uppermost 'App' component, so that the pieces of state that hold onto the current user and their score (along with the respective functions to update said properties) can be prop-drilled via the routes. Our initial Landing Page routes to the Login and Signup pages, both of which subsequently route to the Trivia page after user verification.
+For our team's MVP (minimum viable product) we aimed to enhance this product's authentication by utilizing bcrypt hashing. We also aimed to increase this site's scalability and user friendliness by saving each user's completed progress in our SQL database, and making use of TDD (test driven development) to assure the robustness of our project.
 
-The functionality in the Login page queries the SQL database for inputs corresponding to the text written in the username and password fields. If a valid response is found, then our setUsername function from props is invoked and we route to the Trivia page, which holds onto the current user and score in its own state via prop drilling in the /login/trivia route.
+The first step for our team before getting started on the MVP  would involve getting situated with the legacy code and refactoring  to resolve some bugs. This included reconfiguring the webpack to correctly bundle the frontend, and backend portion of the code. In addition we altered their package.json to setup the development and production environment. We also increased efficiency by refactoring the code to only make a fetch call to the API once rather than everytime the client intiated the next question. We also had to create our own SQL database modeled after theirs with the addition of another column and one more table related to this main table to store favorites.
 
-The Signup page makes a POST request to the database after valid credentials are input, creating a new row in the SQL table with a username, a password, and a score initialized to 0. The username and score properties are then prop-drilled to the Trivia page in the /signup/trivia route.
 
-## How does the trivia game work?
-The first question will be loaded on the Trivia page when the user clicks the "Next Question" button, which triggers the grabTrivia function. The grabTrivia function makes a fetch GET request to an external API which returns an object with an array of objects inside of it:
+Once we successfully achieved our MVP goals we began integrating new features. This would include adding fucntionality that allowed users to return to the last question they left off at rather than beginning from the start as well as displaying the user's progress and accuracy in the form a tracker. The progress meter strictly checked how far the person has made it through the list of questions, while the accuracy meter strictly checks how accurate the user's performance currently is. In contrast to that, our leaderboard displays this accuracy information based off our database allowing for more stability. We also implemented a reset button which would reset the score, progress, correct answers, incorrect answers, leaderboard position, and send the client back to the first question. We also improved the legitimacy of our website by randomizing the order of the answers for the questions. This way users wouldn't be able to memorize answer orders. We then implemented a favorite button that would add user's favorite questions to our SQL database. This would be toggleable, and we created a display for the user to see their favorite questions. In addition to our encrpytion improving secuity, we also made the small change of hiding users passwords during formation and submition. With regards to TDD, we leveraged the power of tools like JEST, supertest, and puppeter to complete unit tests on the express middleware, end to end tests on log in and sign up, and route integration testing to check all endpoints in our server. Finally we updated the UI/UX with regards to styling. 
 
-  {
-    questions: [{...}, {...}, {...}],
-    ...
-  }
+# Stretch Goals: 
 
- In our state we have an "i" property intialized to 0, which will allow us to iterate through the array of objects. 
- 
- Each of the objects inside this array holds a question and all of its relevant data stored in properties(question, code snippet, answer options, correct answer, answer explanation, etc.). Each of these properties on the question object are stored in state once the data is received, and then the value of our "i" key is incremented to that the data for the next object in the array will be loaded the next time the user clicks the "next question" button.
+Our group had a couple stretch goals that we would have liked to complete given more time. One such goal was to randomize the order of the questions as well, rather than having them travel linearly. We also considered some small changes like adding a timer, or a coding sandbox for the client to type code into. Our more extensive stretch goals would include returning questions that clients were weaker at, and implementing functionality that allowed users to create their own quiz packs with their own questions. 
 
- There is also a boolean inside the 'explanation' div that checks if the 'explanation' property in state is set to true. This property in state is set to true when our changeBoolean function is invoked, which is triggered when a user submits an answer A, B, C, or D. When 'explanation' is true, we render the data on the answer explanation property in our explanation div. In simple terms, this means that a user gets to read the correct answer explanation for the current question after they make an answer attempt.
+# Technical Difficulities
+Rendering Browser router components in testing-library/react
+Asynchronicity issues with the unit testing
 
- ## How does the leaderboard work?
-There is more functionality in our changeBoolean function that influences the score and therefore the leaderboard. When a user submits an answer attempt (triggering this changeBoolean function), a fetch PATCH request is made to our SQL database. The PATCH request uses the username property stored in state to access the score for the user who is currently logged in and increments their score in the database by 1.
+**Model of our UI/UX idea**
+![IMG_3885](https://user-images.githubusercontent.com/13509166/189236094-e90dcae7-d09e-4917-890a-b16f7e7db05f.jpg)
+**SQL visualization (prior to adding favorites table)**
+![4f4ae793aac51d1d07341d9e6b8bcd1b](https://user-images.githubusercontent.com/13509166/189236158-81d208e7-682a-4cc8-9d6c-1c452a2b6744.png)
 
-The Leaderboard component makes a fetch GET request to our SQL database which returns an array of user objects. These objects are displayed by looping through the array and rendering an instance of the 'Competitors' div for each object in the array. All of this functionality is wrapped inside of a useEffect which causes the Leaderboard to re-render any time a change is made to its props.score (caused by incrementation in the changeBoolean function on the Trivia page).
+**TDD visuals**
 
-## What is missing?
-Our leaderboard currently does not factor incorrect answers into a user's score. Additionally, a user's progress is not stored in the database, meaning that every time a user logs in they will be set back to the first question in the array and their score will continue to increment upon answering the same question repeatedly if they just log out and log in to answer it again.
-Potential stretch features could keep track of a user's progress, starting them at the place they left off last, or divide the questions into units or categories so that a user can choose what they want to study.
-### Owners
-Kara Chisholm
-Yuehao Wong
-Mike Mezhiritskiy
-Lilah August
+<img width="634" alt="Screen Shot 2022-09-08 at 5 35 46 PM" src="https://user-images.githubusercontent.com/13509166/189236318-e294b1d1-8c1b-4700-9298-694f7d56a325.png">
+<img width="634" alt="Screen Shot 2022-09-08 at 5 42 04 PM" src="https://user-images.githubusercontent.com/13509166/189236345-cbdc7b61-5203-446d-a33a-ecc2245b200b.png">
+<img width="645" alt="Screen Shot 2022-09-08 at 5 52 19 PM" src="https://user-images.githubusercontent.com/13509166/189236369-ca3692e4-085d-481f-b8e9-7e85eb578de5.png">
+
+# Technologies
+**SQL, Node, React, Express, JEST, Supertest, Puppeter**
+
+# Group members 
+
+**Adam Ethan Brian Serena Luke**
+
+
